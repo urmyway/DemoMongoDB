@@ -6,6 +6,7 @@ import org.bson.Document;
 import org.junit.Test;
 import util.MongoUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -106,6 +107,30 @@ public class TestMongoDB {
         MongoCollection<Document> col = database.getCollection("col");
         //构建查询条件 查询age>20
         BasicDBObject bson=new BasicDBObject("age", new BasicDBObject("$gt", 20));
+
+        //得到查询结果
+        FindIterable<Document> find = col.find(bson);
+        //遍历查询结果
+        for(Document doc:find ){
+            System.out.println("name:"+ doc.getString("name") );
+            System.out.println("sex:"+doc.getString("sex"));
+            System.out.println("age:"+doc.getDouble("age"));
+            System.out.println("address:"+doc.getString("address"));
+        }
+    }
+
+    // 条件查询：并且
+    @Test
+    public void findAnd(){
+        //获取连接
+        MongoDatabase database = MongoUtil.getClient();
+        //得到集合封装对象
+        MongoCollection<Document> col = database.getCollection("col");
+
+        BasicDBObject bson1=new BasicDBObject("age", new BasicDBObject("$gte",30));
+        BasicDBObject bson2=new BasicDBObject("age", new BasicDBObject("$lt",40));
+        //构建查询条件 >=30 & <40
+        BasicDBObject bson=new BasicDBObject("$and", Arrays.asList( bson1, bson2 )  );
 
         //得到查询结果
         FindIterable<Document> find = col.find(bson);
