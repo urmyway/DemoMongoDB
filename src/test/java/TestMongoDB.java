@@ -1,4 +1,5 @@
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -50,5 +51,25 @@ public class TestMongoDB {
         //参数1：修改条件  参数2：修改后的值
         col.updateOne(bson, bson2);
         //collection.updateMany(filter, update);//修改符合条件的所有记录
+    }
+
+    //查询所有
+    @Test
+    public void findAll(){
+        //获取连接
+        MongoDatabase database = MongoUtil.getClient();
+        //得到集合封装对象
+        MongoCollection<Document> col = database.getCollection("col");
+        //构建查询条件
+        BasicDBObject bson=new BasicDBObject("name", "诸葛亮");
+        //得到查询结果
+        FindIterable<Document> find = col.find(bson);
+        //遍历查询结果
+        for(Document doc:find ){
+            System.out.println("name:"+ doc.getString("name") );
+            System.out.println("sex:"+doc.getString("sex"));
+            System.out.println("age:"+doc.getDouble("age"));
+            System.out.println("address:"+doc.getString("address"));
+        }
     }
 }
