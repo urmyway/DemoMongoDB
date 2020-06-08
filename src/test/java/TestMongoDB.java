@@ -2,11 +2,13 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import dao.StudentDao;
 import org.bson.Document;
 import org.junit.Test;
 import util.MongoUtil;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -165,5 +167,16 @@ public class TestMongoDB {
             System.out.println("age:"+doc.getDouble("age"));
             System.out.println("address:"+doc.getString("address"));
         }
+    }
+
+    // 线程池插入数据测试
+    @Test
+    public void testPool(){
+        long startTime = new Date().getTime();//开始时间
+
+        StudentDao studentDao=new StudentDao();
+        studentDao.save("测试", "男", 25.0, "测试地址");
+        long endTime = new Date().getTime();//完成时间
+        System.out.println("完成时间："+(endTime-startTime)+"毫秒");
     }
 }

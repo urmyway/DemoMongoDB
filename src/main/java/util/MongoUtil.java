@@ -1,8 +1,6 @@
 package util;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import com.mongodb.client.MongoDatabase;
 
 import java.util.ArrayList;
@@ -11,10 +9,12 @@ import java.util.List;
 //mongodb 连接数据库工具类
 public class MongoUtil {
 
+    private static MongoClient mongoClient=null;
+
     //不通过认证获取连接数据库对象
     public static MongoDatabase getClient(){
         //获取连接 不传参默认为localhost，27017
-        MongoClient mongoClient = new MongoClient();
+        mongoClient = new MongoClient();
         MongoDatabase runoob = mongoClient.getDatabase("runoob");
         return runoob;
     }
@@ -39,5 +39,24 @@ public class MongoUtil {
 
         //返回连接数据库对象
         return mongoDatabase;
+    }
+
+    //对mongoClient初始化
+    private static void init(){
+        //连接池选项
+        MongoClientOptions.Builder builder = new MongoClientOptions.Builder();//选项构建者
+        builder.connectTimeout(5000);//设置连接超时时间
+        builder.socketTimeout(5000);//读取数据的超时时间
+        builder.connectionsPerHost(30);//每个地址最大请求数
+        builder.writeConcern(WriteConcern.NORMAL);//写入策略，仅抛出网络异常
+        MongoClientOptions options = builder.build();
+        mongoClient = new MongoClient();
+    }
+
+    public static MongoDatabase getDatabase(){
+        if(mongoClient==null){
+            init();
+        }
+        return mongoClient.getDatabase("runoob");
     }
 }
