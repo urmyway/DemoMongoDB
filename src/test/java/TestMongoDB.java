@@ -74,7 +74,7 @@ public class TestMongoDB {
         }
     }
 
-    //查询所有
+    // 模糊查询
     @Test
     public void findLike(){
         //获取连接
@@ -85,6 +85,27 @@ public class TestMongoDB {
         Pattern queryPattern= Pattern.compile("^.*新.*$");
         //构建查询条件
         BasicDBObject bson=new BasicDBObject("address",queryPattern);
+
+        //得到查询结果
+        FindIterable<Document> find = col.find(bson);
+        //遍历查询结果
+        for(Document doc:find ){
+            System.out.println("name:"+ doc.getString("name") );
+            System.out.println("sex:"+doc.getString("sex"));
+            System.out.println("age:"+doc.getDouble("age"));
+            System.out.println("address:"+doc.getString("address"));
+        }
+    }
+
+    // 条件查询：大于小于
+    @Test
+    public void findLt(){
+        //获取连接
+        MongoDatabase database = MongoUtil.getClient();
+        //得到集合封装对象
+        MongoCollection<Document> col = database.getCollection("col");
+        //构建查询条件 查询age>20
+        BasicDBObject bson=new BasicDBObject("age", new BasicDBObject("$gt", 20));
 
         //得到查询结果
         FindIterable<Document> find = col.find(bson);
