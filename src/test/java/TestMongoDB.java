@@ -142,4 +142,28 @@ public class TestMongoDB {
             System.out.println("address:"+doc.getString("address"));
         }
     }
+
+    // 条件查询：或
+    @Test
+    public void findOr(){
+        //获取连接
+        MongoDatabase database = MongoUtil.getClient();
+        //得到集合封装对象
+        MongoCollection<Document> col = database.getCollection("col");
+
+        BasicDBObject bson1=new BasicDBObject("age", new BasicDBObject("$gte",20));
+        BasicDBObject bson2=new BasicDBObject("sex", "女");
+        //构建查询条件 age>=20 & sex = "女"
+        BasicDBObject bson=new BasicDBObject("$or", Arrays.asList( bson1, bson2 )  );
+
+        //得到查询结果
+        FindIterable<Document> find = col.find(bson);
+        //遍历查询结果
+        for(Document doc:find ){
+            System.out.println("name:"+ doc.getString("name") );
+            System.out.println("sex:"+doc.getString("sex"));
+            System.out.println("age:"+doc.getDouble("age"));
+            System.out.println("address:"+doc.getString("address"));
+        }
+    }
 }
