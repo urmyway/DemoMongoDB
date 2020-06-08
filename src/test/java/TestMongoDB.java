@@ -8,6 +8,7 @@ import util.MongoUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class TestMongoDB {
 
@@ -62,6 +63,29 @@ public class TestMongoDB {
         MongoCollection<Document> col = database.getCollection("col");
         //构建查询条件
         BasicDBObject bson=new BasicDBObject("name", "诸葛亮");
+        //得到查询结果
+        FindIterable<Document> find = col.find(bson);
+        //遍历查询结果
+        for(Document doc:find ){
+            System.out.println("name:"+ doc.getString("name") );
+            System.out.println("sex:"+doc.getString("sex"));
+            System.out.println("age:"+doc.getDouble("age"));
+            System.out.println("address:"+doc.getString("address"));
+        }
+    }
+
+    //查询所有
+    @Test
+    public void findLike(){
+        //获取连接
+        MongoDatabase database = MongoUtil.getClient();
+        //得到集合封装对象
+        MongoCollection<Document> col = database.getCollection("col");
+        //模糊查询
+        Pattern queryPattern= Pattern.compile("^.*新.*$");
+        //构建查询条件
+        BasicDBObject bson=new BasicDBObject("address",queryPattern);
+
         //得到查询结果
         FindIterable<Document> find = col.find(bson);
         //遍历查询结果
