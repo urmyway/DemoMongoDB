@@ -1,3 +1,4 @@
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
@@ -23,5 +24,16 @@ public class TestMongoDB {
         Document doc=new Document(map);
         col.insertOne(doc);//插入一条记录
         //collection.insertMany(documents);//一次性插入多条文档
+    }
+
+    @Test
+    public void delete(){
+        //获取连接
+        MongoDatabase database = MongoUtil.getClient();
+        //得到集合封装对象
+        MongoCollection<Document> col = database.getCollection("col");
+        BasicDBObject bson=new BasicDBObject("name", "诸葛亮");
+        col.deleteOne(bson);//删除记录（符合条件的第一条记录）
+        //collection.deleteMany(bson);//删除符合条件的全部记录
     }
 }
