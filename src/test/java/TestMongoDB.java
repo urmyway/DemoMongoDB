@@ -36,4 +36,19 @@ public class TestMongoDB {
         col.deleteOne(bson);//删除记录（符合条件的第一条记录）
         //collection.deleteMany(bson);//删除符合条件的全部记录
     }
+
+    @Test
+    public void update(){
+        //获取连接
+        MongoDatabase database = MongoUtil.getClient();
+        //得到集合封装对象
+        MongoCollection<Document> col = database.getCollection("col");
+        //修改的条件
+        BasicDBObject bson= new BasicDBObject("name", "诸葛亮");
+        //修改后的值
+        BasicDBObject bson2 = new BasicDBObject("$set",  new BasicDBObject("address", "新野"));
+        //参数1：修改条件  参数2：修改后的值
+        col.updateOne(bson, bson2);
+        //collection.updateMany(filter, update);//修改符合条件的所有记录
+    }
 }
